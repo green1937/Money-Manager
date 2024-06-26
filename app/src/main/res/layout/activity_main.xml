@@ -68,7 +68,6 @@
         android:id="@+id/addnewTrans"
         android:src="@drawable/add"
         android:padding="30dp"
-        android:background="none"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"/>
 
