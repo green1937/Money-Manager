@@ -1,13 +1,16 @@
 package com.example.moneymanager;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +32,6 @@ public class AddExpenseActivity extends AppCompatActivity {
         });
         calender = (CalendarView) findViewById(R.id.calendarView1);
         eTxt = (EditText) findViewById(R.id.timenotetext);
-
         calender.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
@@ -48,5 +50,25 @@ public class AddExpenseActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Применяем адаптер к элементу spinner
         spinner.setAdapter(adapter);
+
+        //Получение фотографии из галереи
+        Button gallery = findViewById(R.id.photoBtn);
+        gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 3);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            ImageView imageView = findViewById(R.id.photoInput);
+            imageView.setImageURI(selectedImage);
+        }
     }
 }
