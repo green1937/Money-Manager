@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/rounded_corner">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateOut"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:text="Date"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/categoryOut"
+        android:textSize="25dp"
+        android:layout_below="@+id/dateOut"
+        android:textColor="#663910"
+        android:text="Category"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/priceOut"
+        android:textSize="25dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/dateOut"
+        android:layout_alignParentBottom="@+id/dateOut"
+        android:textColor="#AA0000"
+        android:text="Price"
+        android:layout_toLeftOf="@+id/currencyOut"
+         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currencyOut"
+        android:textSize="25dp"
+        android:layout_below="@+id/dateOut"
+        android:layout_alignParentBottom="@+id/dateOut"
+        android:textColor="#AA0000"
+        android:text="$"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>
