@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MenuActivity">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/backFromMenu"
+        android:src="@drawable/back"
+        android:padding="8dp"
+        android:background="#FFFEFD"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:id="@+id/viewExpenses"
+        android:text="Визуализация расходов"
+        android:textColor="@color/black"
+        android:textSize="27dp"
+        android:textAlignment="center"
+        android:textStyle="normal"
+        android:padding="6dp"
+        android:background="#FFD1A9" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/exportExpenses"
+        android:text="Экспортировать данные"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:layout_marginVertical="10dp"
+        android:textSize="27dp"
+        android:textStyle="normal"
+        android:padding="6dp"
+        android:background="#FFD1A9"
+        android:layout_below="@+id/viewExpenses"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seeCurrPeriod"
+        android:text="Текущий период"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="27dp"
+        android:textStyle="normal"
+        android:padding="6dp"
+        android:background="#FFD1A9"
+        android:layout_below="@+id/exportExpenses"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/analyzeData"
+        android:text="Анализ расходов"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:layout_marginVertical="10dp"
+        android:textSize="27dp"
+        android:textStyle="normal"
+        android:padding="6dp"
+        android:background="#FFD1A9"
+        android:layout_below="@+id/seeCurrPeriod"/>
+
+    <Button
+        android:id="@+id/sortBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Новый период"
+        android:textSize="25dp"
+        android:paddingHorizontal="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="#FFA727"
+        android:layout_marginBottom="10dp"/>
+</RelativeLayout>
