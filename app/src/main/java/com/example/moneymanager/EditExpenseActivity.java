@@ -1,12 +1,17 @@
 package com.example.moneymanager;
 
+import static com.example.moneymanager.MainActivity.REQUEST_CODE_STORAGE_PERMISSION;
+
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.Size;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,8 +21,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -26,6 +35,12 @@ import io.realm.RealmResults;
 
 public class EditExpenseActivity extends AppCompatActivity {
 
+    String[] required_permissions = new String[]{
+            Manifest.permission.READ_MEDIA_IMAGES
+    };
+    Boolean is_storage_image_permitted = false;
+    String TAG = "Permission";
+
     CalendarView calender;
     String item;
     String item2;
@@ -33,11 +48,29 @@ public class EditExpenseActivity extends AppCompatActivity {
     String[] currencies = {"RUB", "EUR", "USD", "NOK", "JPY"};
 
     Uri selectedImage;
+    private static final String readExternalStorage;
 
+    private static final String readMediaImages;
+
+    public static String storage_permissions = readExternalStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String storage_permissions_33 = readMediaImages = Manifest.permission.READ_MEDIA_IMAGES;
+
+    public static String[] permissions() {
+        String p;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            p = storage_permissions_33;
+        } else {
+            p = storage_permissions;
+        }
+        return new String[]{p};
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        //requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUESTC REQUEST_CODE);
         setContentView(R.layout.activity_add_expense);
         EditText timeInput = (EditText) findViewById(R.id.timeexpensetext);
         EditText priceinput = findViewById(R.id.priceinput);
@@ -123,16 +156,17 @@ public class EditExpenseActivity extends AppCompatActivity {
         spinner2.setOnItemSelectedListener(itemSelectedListener2);
 
 
-
+        ActivityCompat.requestPermissions(
+                EditExpenseActivity.this,
+                permissions(),
+                REQUEST_CODE_STORAGE_PERMISSION
+        );
         ImageView imageView = findViewById(R.id.photoInput);
         String photoUri = arguments.getString("photo_uri");
         if(photoUri!= null) {
-            Bitmap imgBitmap = BitmapFactory.decodeFile(photoUri);
+            Uri photo = Uri.parse(photoUri);
+            imageView.setImageURI(photo);
 
-            // on below line we are setting bitmap to our image view.
-            imageView.setImageBitmap(imgBitmap);
-            //Uri photo = Uri.parse(photoUri);
-            //imageView.setImageURI(photo);
         }
 
         //Получение фотографии из галереи

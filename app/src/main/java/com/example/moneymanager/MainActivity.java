@@ -14,6 +14,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
+    static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     RealmResults<Expense> expensesList; // глобальная переменная
     @Override
     protected void onCreate(Bundle savedInstanceState) {
