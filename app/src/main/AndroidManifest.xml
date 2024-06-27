@@ -15,6 +15,9 @@
         android:theme="@style/Theme.MoneyManager"
         tools:targetApi="31">
         <activity
+            android:name=".NewPeriodActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditExpenseActivity"
             android:exported="false" />
         <activity

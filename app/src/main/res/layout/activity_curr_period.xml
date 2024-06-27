@@ -1,6 +1,294 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFECDD"
+    tools:context=".NewPeriodActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_corner">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/menu"
+            android:src="@drawable/menu"
+            android:padding="8dp"
+            android:background="#FFD1A9"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainTitle"
+            android:text="    Период"
+            android:textColor="#663910"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:padding="6dp"
+            android:background="#FFD1A9" />
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/budgetText"
+                android:layout_marginTop="20dp"
+                android:text="Общий бюджет"
+                android:textColor="#663910"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                android:padding="6dp"
+                android:textAlignment="center"/>
+
+            <EditText
+                android:id="@+id/timeexpensetext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="60dp"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:hint="Сумма"
+                android:textAlignment="center"
+                android:background="@color/white"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ctglimitsText"
+                android:layout_marginTop="20dp"
+                android:text="Лимиты на категории расходов"
+                android:textColor="#663910"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                android:padding="6dp"
+                android:textAlignment="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/ctg1InputPrice"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:hint="Сумма"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ctg1Text"
+                android:text="Еда"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:padding="6dp"
+                android:layout_marginLeft="30dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/ctg2InputPrice"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:hint="Сумма"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ctg2Text"
+                android:text="Транспорт"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:padding="6dp"
+                android:layout_marginLeft="30dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/ctg3InputPrice"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:hint="Сумма"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ctg3Text"
+                android:text="Развлечения"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:padding="6dp"
+                android:layout_marginLeft="30dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/ctg4InputPrice"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:hint="Сумма"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ctg4Text"
+                android:text="Работа"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:padding="6dp"
+                android:layout_marginLeft="30dp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/ctg5InputPrice"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:hint="Сумма"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ctg5Text"
+                android:text="Учеба"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:padding="6dp"
+                android:layout_marginLeft="30dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/ctg6InputPrice"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:hint="Сумма"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ctg6Text"
+                android:text="Здоровье"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:padding="6dp"
+                android:layout_marginLeft="30dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/ctg7InputPrice"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:hint="Сумма"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ctg7Text"
+                android:text="Остальное"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:padding="6dp"
+                android:layout_marginLeft="30dp"/>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/savebtn"
+            android:backgroundTint="#FFA727"
+            android:layout_gravity="center"
+            android:text="Сохранить"
+            android:textSize="25dp"
+            android:layout_marginTop="30dp" />
+
+
+
+    </LinearLayout>
+</ScrollView>
