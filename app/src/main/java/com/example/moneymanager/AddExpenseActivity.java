@@ -24,7 +24,7 @@ public class AddExpenseActivity extends AppCompatActivity {
     EditText eTxt;
     String item;
     String item2;
-    String[] categories = { "Еда", "Транспорт", "Развлечения", "Работа", "Учеба", "Дом", "Одежда", "Спорт", "Здоровье", "Остальное"};
+    String[] categories = { "Еда", "Транспорт", "Развлечения", "Работа", "Учеба", "Здоровье", "Остальное"};
     String[] currencies = {"RUB", "EUR", "USD", "NOK", "JPY"};
     Uri selectedImage;
     @Override
