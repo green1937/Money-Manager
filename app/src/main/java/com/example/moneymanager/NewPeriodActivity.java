@@ -30,7 +30,7 @@ public class NewPeriodActivity extends AppCompatActivity {
                 startActivity(new Intent(NewPeriodActivity.this, MenuActivity.class));
             }
         });
-
+        EditText allBudget = findViewById(R.id.budgetInput);
         EditText food = findViewById(R.id.ctg1InputPrice);
         EditText transport = findViewById(R.id.ctg2InputPrice);
         EditText entertainment = findViewById(R.id.ctg3InputPrice);
@@ -49,9 +49,9 @@ public class NewPeriodActivity extends AppCompatActivity {
                 Date currentDate = new Date();
                 // Форматирование времени как "день.месяц.год"
                 DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-                String dateText = dateFormat.format(currentDate);
-                System.out.println("seeeeeee ---- your current date  " + dateText);
-
+                String dateStart = dateFormat.format(currentDate);
+                System.out.println("seeeeeee ---- your current date  " + dateStart);
+                int budget = Integer.parseInt(allBudget.getText().toString());
                 int priceFood = Integer.parseInt(food.getText().toString());
                 int priceTransport = Integer.parseInt(transport.getText().toString());
                 int priceEntertainment = Integer.parseInt(entertainment.getText().toString());
@@ -63,6 +63,8 @@ public class NewPeriodActivity extends AppCompatActivity {
 
                 realm.beginTransaction();
                 Period period = realm.createObject(Period.class);
+                period.setDateStart(dateStart);
+                period.setBudget(budget);
                 period.setPriceFood(priceFood);
                 period.setPriceTransport(priceTransport);
                 period.setPriceEntertainment(priceEntertainment);

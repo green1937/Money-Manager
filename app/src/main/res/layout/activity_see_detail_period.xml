@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#FFECDD"
-    tools:context=".NewPeriodActivity">
+    tools:context=".CurrentPeriodActivity">
 
 
     <LinearLayout
@@ -14,35 +14,46 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/rounded_corner">
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/menu"
-            android:src="@drawable/menu"
-            android:padding="8dp"
-            android:background="#FFD1A9"/>
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/mainTitle"
-            android:text="    Период"
-            android:textColor="#663910"
-            android:textSize="27dp"
-            android:textStyle="bold"
-            android:padding="6dp"
-            android:background="#FFD1A9" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:background="@drawable/rounded_corner">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/menu"
+                android:src="@drawable/menu"
+                android:padding="8dp"
+                android:background="#FFD1A9"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mainTitle"
+                android:text="    Текущий период"
+                android:textColor="#663910"
+                android:textSize="27dp"
+                android:textStyle="bold"
+                android:padding="6dp"
+                android:background="#FFD1A9" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/dateStartPeriod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="60dp"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="italic"
+                android:hint="Дата начала"
+                android:textAlignment="center" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -278,15 +289,7 @@
 
         </LinearLayout>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/savebtn"
-            android:backgroundTint="#FFA727"
-            android:layout_gravity="center"
-            android:text="Сохранить"
-            android:textSize="25dp"
-            android:layout_marginTop="30dp" />
+
 
 
 

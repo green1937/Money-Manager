@@ -34,5 +34,14 @@ public class MenuActivity extends AppCompatActivity {
                 startActivity(new Intent(MenuActivity.this, NewPeriodActivity.class));
             }
         });
+
+        Button seeCurrPeriod = findViewById(R.id.seeCurrPeriod);
+        seeCurrPeriod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuActivity.this, CurrentPeriodActivity.class));
+            }
+        });
+
     }
 }
