@@ -32,7 +32,9 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".GraphActivity"
+            android:exported="false" />
         <activity
             android:name=".CurrentPeriodActivity"
             android:exported="false" />

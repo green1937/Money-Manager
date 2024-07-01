@@ -43,5 +43,13 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+        Button visualizationBtn = findViewById(R.id.viewExpenses);
+        visualizationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuActivity.this, GraphActivity.class));
+            }
+        });
+
     }
 }
