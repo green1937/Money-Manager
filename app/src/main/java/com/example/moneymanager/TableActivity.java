@@ -7,21 +7,25 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class TableActivity extends AppCompatActivity {
-    GraphView graph;
-
-
+    RecyclerView recyclerView;
+    ExpenceAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualization_table);
-
-        graph = (GraphView) findViewById(R.id.graph);
-
-
 
         Button barBtn = findViewById(R.id.diagramBtn);
         barBtn.setOnClickListener(new View.OnClickListener() {
@@ -46,5 +50,24 @@ public class TableActivity extends AppCompatActivity {
                 startActivity(new Intent(TableActivity.this, MenuActivity.class));
             }
         });
+
+        recyclerView = findViewById(R.id.recycler_view);
+        setRecyclerView();
+
     }
+
+    private void setRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ExpenceAdapter(this, getList());
+        recyclerView.setAdapter(adapter);
+    }
+
+    private RealmResults<Expense> getList() {
+        Realm.init(getApplicationContext());
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Expense> expensesList = realm.where(Expense.class).findAll();
+        return expensesList;
+    }
+
 }

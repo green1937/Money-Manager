@@ -49,12 +49,41 @@
         android:layout_marginEnd="20dp"
         android:paddingHorizontal="35dp"/>
 
-    <com.jjoe64.graphview.GraphView
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/graph"
-        android:layout_below="@+id/graphBtn"
-        android:layout_margin="20dp"/>
+        android:layout_below="@id/graphBtn"
+        android:stretchColumns="1,2,3">
 
+        <TableRow>
+            <TextView
+                android:text="Дата"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:layout_column="1"
+                android:gravity="center"/>
+            <TextView
+                android:text="Категория"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:layout_column="2"
+                android:gravity="center"/>
+            <TextView
+                android:text="Сумма"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:layout_column="3"
+                android:gravity="center"/>
+        </TableRow>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </TableLayout>
 
 </RelativeLayout>
