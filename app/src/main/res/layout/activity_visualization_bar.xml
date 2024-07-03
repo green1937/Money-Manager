@@ -1,60 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF6EF"
-    tools:context=".MainActivity">
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/menu"
-        android:src="@drawable/menu"
-        android:padding="8dp"
-        android:background="#FFD1A9"/>
+    tools:context=".MainActivity"
+    android:scrollbars="vertical">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/menu"
+            android:src="@drawable/menu"
+            android:padding="8dp"
+            android:background="#FFD1A9"/>
 
 
-    <TextView
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainTitle"
+            android:text="    Визуализация"
+            android:textColor="#663910"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:padding="6dp"
+            android:background="#FFD1A9"
+            android:layout_toRightOf="@+id/menu"/>
+        <Button
+            android:id="@+id/tableBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Таблица"
+            android:textSize="17dp"
+            android:layout_below="@+id/mainTitle"
+            android:layout_alignParentLeft="true"
+            android:backgroundTint="#FFA727"
+            android:layout_marginLeft="20dp"
+            android:paddingHorizontal="45dp"/>
+        <Button
+            android:id="@+id/graphBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="График"
+            android:textSize="17dp"
+            android:layout_below="@+id/mainTitle"
+            android:layout_alignParentRight="true"
+            android:backgroundTint="#FFA727"
+            android:layout_marginEnd="20dp"
+            android:paddingHorizontal="50dp"/>
+
+        <!--<com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_below="@+id/tableBtn"/> -->
+
+    <com.github.mikephil.charting.charts.PieChart
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/mainTitle"
-        android:text="    Визуализация"
-        android:textColor="#663910"
-        android:textSize="27dp"
-        android:textStyle="bold"
-        android:padding="6dp"
-        android:background="#FFD1A9"
-        android:layout_toRightOf="@+id/menu"/>
-    <Button
-        android:id="@+id/tableBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Таблица"
-        android:textSize="17dp"
-        android:layout_below="@+id/mainTitle"
-        android:layout_alignParentLeft="true"
-        android:backgroundTint="#FFA727"
-        android:layout_marginLeft="20dp"
-        android:paddingHorizontal="45dp"/>
-    <Button
-        android:id="@+id/graphBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="График"
-        android:textSize="17dp"
-        android:layout_below="@+id/mainTitle"
-        android:layout_alignParentRight="true"
-        android:backgroundTint="#FFA727"
-        android:layout_marginEnd="20dp"
-        android:paddingHorizontal="50dp"/>
-
-    <com.jjoe64.graphview.GraphView
+        android:layout_height="280dp"
+        android:id="@+id/cyrcleDiagram"
+        android:layout_below="@+id/tableBtn"/>
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/graph"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/graph"
-        android:layout_below="@+id/tableBtn"
-        android:layout_margin="20dp"/>
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/cyrcleDiagram"/>
 
+    </RelativeLayout>
 
-</RelativeLayout>
