@@ -35,6 +35,14 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+        Button exportBtn = findViewById(R.id.exportExpenses);
+        exportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuActivity.this, ExportDataActivity.class));
+            }
+        });
+
         Button seeCurrPeriod = findViewById(R.id.seeCurrPeriod);
         seeCurrPeriod.setOnClickListener(new View.OnClickListener() {
             @Override
