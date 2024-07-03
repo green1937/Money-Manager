@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#FBE5D1"
     tools:context=".MenuActivity">
 
     <ImageButton
@@ -11,7 +12,7 @@
         android:id="@+id/backFromMenu"
         android:src="@drawable/back"
         android:padding="8dp"
-        android:background="#FFFEFD"/>
+        android:backgroundTint="#FBE5D1"/>
 
 
     <Button

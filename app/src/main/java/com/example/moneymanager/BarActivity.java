@@ -36,12 +36,8 @@ public class BarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualization_bar);
 
-        //graph = (GraphView) findViewById(R.id.graph);
-        //graph.getViewport().setScalable(true);
-
         Realm.init(getApplicationContext());
         Realm realm = Realm.getDefaultInstance();
-        List<Integer> expOfEachCtg = new ArrayList<>();
 
         int priceCtg1 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Еда").findAll().sum("price").toString());
         int priceCtg2 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Транспорт").findAll().sum("price").toString());
@@ -50,30 +46,7 @@ public class BarActivity extends AppCompatActivity {
         int priceCtg5 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Учеба").findAll().sum("price").toString());
         int priceCtg6 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Здоровье").findAll().sum("price").toString());
         int priceCtg7 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Остальное").findAll().sum("price").toString());
-/*
-        expOfEachCtg.add(priceCtg1);
-        expOfEachCtg.add(priceCtg2);
-        expOfEachCtg.add(priceCtg3);
-        expOfEachCtg.add(priceCtg4);
-        expOfEachCtg.add(priceCtg5);
-        expOfEachCtg.add(priceCtg6);
-        expOfEachCtg.add(priceCtg7);
 
-        DataPoint[] points = new DataPoint[7];
-        for (int i = 0; i < 7; i++) {
-            points[i] = new DataPoint(i, expOfEachCtg.get(i));
-        }
-        BarGraphSeries<DataPoint> series = new BarGraphSeries<>(points);
-        graph.addSeries(series);
-
-        series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
-            @Override
-            public int get(DataPoint data) {
-                return Color.rgb(179, 30, 76);
-            }
-        });
-
-        series.setSpacing(50); */
         int[] colors = {
                 Color.rgb(78, 173, 0),
                 Color.rgb(251, 165, 10),
@@ -92,10 +65,6 @@ public class BarActivity extends AppCompatActivity {
         entries1.add(new BarEntry(4, priceCtg5, "Учеба"));
         entries1.add(new BarEntry(5, priceCtg6, "Здоровье"));
         entries1.add(new BarEntry(6, priceCtg7, "Остальное"));
-
-
-
-
 
         BarDataSet barDataSet = new BarDataSet(entries1, "Категории");
         barDataSet.setColors(colors);

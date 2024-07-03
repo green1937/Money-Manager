@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
         Realm.init(getApplicationContext());
 
 
-        Button sortBtn = findViewById(R.id.sortBtn);
-
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Realm realm = Realm.getDefaultInstance();
@@ -64,7 +62,28 @@ public class MainActivity extends AppCompatActivity {
                 myAdapter.notifyDataSetChanged();
             }
         });
-        sortBtn.setOnClickListener(new View.OnClickListener() {
+        ImageButton noBtn = findViewById(R.id.noBtn);
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Realm realm = Realm.getDefaultInstance();
+                expensesList = realm.where(Expense.class).findAll();
+                MyAdapter myAdapter = new MyAdapter(getApplicationContext(), expensesList);
+                recyclerView.setAdapter(myAdapter);
+                expensesList.addChangeListener(new RealmChangeListener<RealmResults<Expense>>() {
+                    @Override
+                    public void onChange(RealmResults<Expense> notes) {
+                        myAdapter.notifyDataSetChanged();
+                    }
+                });
+
+            }
+        });
+
+
+
+        ImageButton yesBtn = findViewById(R.id.yesBtn);
+        yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Получение данных
