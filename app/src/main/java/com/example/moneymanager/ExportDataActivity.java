@@ -12,11 +12,21 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 
 import io.realm.Realm;
@@ -69,7 +79,6 @@ public class ExportDataActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (item.equals(".json")) {
-
                     try {
                         File path = Environment.getExternalStoragePublicDirectory(
                                 Environment.DIRECTORY_DOWNLOADS);
@@ -78,23 +87,50 @@ public class ExportDataActivity extends AppCompatActivity {
                         BufferedWriter writer = new BufferedWriter(new FileWriter(output, true));
                         RealmResults<Expense> results = realm.where(Expense.class).findAll();
                         Iterator<Expense> iterator = results.iterator();
-                        writer.write("{\"Output\": {");
+                        writer.write("[");
                         int id=0;
+                        int size = realm.where(Expense.class).findAll().size();
                         while (iterator.hasNext()) {
                             Expense next = realm.copyFromRealm(iterator.next());
-                            writer.write("\"" + id + "\": ");
+                            //writer.write("\"" + id + "\": ");
                             writer.write(g.toJson(next));
-                            writer.write(",");
+                            if(id<size-1) {
+                            writer.write(",");}
                             id+=1;
                         }
-                        writer.write("}}");
-
+                        writer.write("]");
                         writer.close();
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
+                if(item.equals(".csv")) {
+                    File path = Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DOWNLOADS);
+                    JsonNode jsonTree;
+                    try {
+                        jsonTree = new ObjectMapper().readTree(new File(path, "output" + ".json"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    CsvSchema.Builder csvSchemaBuilder = CsvSchema.builder();
+                    JsonNode firstObject = jsonTree.elements().next();
+                    firstObject.fieldNames().forEachRemaining(fieldName -> {
+                        csvSchemaBuilder.addColumn(fieldName);
+                    });
+                    CsvSchema csvSchema = csvSchemaBuilder.build().withHeader();
+                    CsvMapper csvMapper = new CsvMapper();
+                    try {
+                        csvMapper.writerFor(JsonNode.class)
+                                .with(csvSchema)
+                                .writeValue(new File(path, "output" + ".csv"), jsonTree);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+
 
 
             }
