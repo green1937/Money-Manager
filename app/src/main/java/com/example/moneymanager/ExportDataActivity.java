@@ -17,17 +17,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
 import com.google.gson.Gson;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -83,8 +94,7 @@ public class ExportDataActivity extends AppCompatActivity {
                         File path = Environment.getExternalStoragePublicDirectory(
                                 Environment.DIRECTORY_DOWNLOADS);
                         File output = new File(path, "output" + ".json");
-                        System.out.println(output + "ЦЙЦ");
-                        BufferedWriter writer = new BufferedWriter(new FileWriter(output, true));
+                        BufferedWriter writer = new BufferedWriter(new FileWriter(output, false));
                         RealmResults<Expense> results = realm.where(Expense.class).findAll();
                         Iterator<Expense> iterator = results.iterator();
                         writer.write("[");
@@ -130,6 +140,72 @@ public class ExportDataActivity extends AppCompatActivity {
                     }
 
                 }
+
+                if (item.equals(".xlsx")) {
+                    XSSFWorkbook workbook = new XSSFWorkbook();
+                    XSSFSheet sheet = workbook.createSheet("expence Details");
+
+                    Map<String, Object[]> data = new TreeMap<String, Object[]>();
+
+                    data.put("1", new Object[] { "PRICE", "CURRENCY", "CATEGORY", "DESCRIPTION", "DATE", "PHORO_URI" });
+
+                    Realm.init(getApplicationContext());
+                    Realm realm = Realm.getDefaultInstance();
+                    RealmResults<Expense> expensesList = realm.where(Expense.class).findAll();
+
+                    int price;
+                    String currency, ctg, descr, date, photo;
+                    int i = 2;
+
+                    for (Expense expense : expensesList) {
+                        price = expense.getPrice();
+                        currency = expense.getCurrency();
+                        ctg = expense.getCategory();
+                        descr = expense.getDescription();
+                        date = expense.getDateExp();
+                        photo = expense.getPhoto_uri();
+                        data.put(String.valueOf(i), new Object[] { price, currency, ctg, descr, date, photo });
+                        i+=1;
+                    }
+
+
+                    Set<String> keyset = data.keySet();
+                    int rownum = 0;
+
+                    for (String key : keyset) {
+                        Row row = sheet.createRow(rownum++);
+                        Object[] objArr = data.get(key);
+                        int cellnum = 0;
+
+                        for (Object obj : objArr) {
+
+                            Cell cell = row.createCell(cellnum++);
+
+                            if (obj instanceof String) {
+                                cell.setCellValue((String) obj);
+                            }
+
+                            else if (obj instanceof Integer) {
+                                cell.setCellValue((Integer) obj);
+                            }
+                        }
+                    }
+
+                    try {
+
+                        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                        FileOutputStream out = new FileOutputStream(new File(path, "output.xlsx"));
+                        workbook.write(out);
+                        out.close();
+                    }
+
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+
 
 
 
