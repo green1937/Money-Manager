@@ -47,7 +47,18 @@ public class FilterActivity extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 // TODO Auto-generated method stub
-                eTxt.setText(dayOfMonth + "." + (month + 1) + "." + year);
+                if ((month + 1 < 10) &&(dayOfMonth >= 10)) {
+                    eTxt.setText(dayOfMonth + ".0" + (month + 1) + "." + year);
+                }
+                if ((dayOfMonth < 10) && (month + 1 < 10)) {
+                    eTxt.setText("0" + dayOfMonth + ".0" + (month + 1) + "." + year);
+                }
+                if ((month + 1 >= 10) && (dayOfMonth < 10)) {
+                    eTxt.setText("0" + dayOfMonth + "." + (month + 1) + "." + year);
+                }
+                if ((month + 1 >= 10) && (dayOfMonth >= 10)) {
+                    eTxt.setText(dayOfMonth + "." + (month + 1) + "." + year);
+                }
             }
 
         });

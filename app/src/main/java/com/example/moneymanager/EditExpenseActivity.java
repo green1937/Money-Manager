@@ -88,7 +88,18 @@ public class EditExpenseActivity extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 // TODO Auto-generated method stub
-                timeInput.setText(dayOfMonth + "." + (month + 1) + "." + year);
+                if ((month + 1 < 10) &&(dayOfMonth >= 10)) {
+                    timeInput.setText(dayOfMonth + ".0" + (month + 1) + "." + year);
+                }
+                if ((dayOfMonth < 10) && (month + 1 < 10)) {
+                    timeInput.setText("0" + dayOfMonth + ".0" + (month + 1) + "." + year);
+                }
+                if ((month + 1 >= 10) && (dayOfMonth < 10)) {
+                    timeInput.setText("0" + dayOfMonth + "." + (month + 1) + "." + year);
+                }
+                if ((month + 1 >= 10) && (dayOfMonth >= 10)) {
+                    timeInput.setText(dayOfMonth + "." + (month + 1) + "." + year);
+                }
             }
 
         });
