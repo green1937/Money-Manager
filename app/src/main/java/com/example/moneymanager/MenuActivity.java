@@ -51,6 +51,15 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+        Button currPeriodsAnalysis = findViewById(R.id.analyzeData);
+        currPeriodsAnalysis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuActivity.this, ExpensesAnalysisActivity.class));
+            }
+        });
+
+
         Button visualizationBtn = findViewById(R.id.viewExpenses);
         visualizationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
