@@ -45,7 +45,7 @@ public class EditExpenseActivity extends AppCompatActivity {
     String item;
     String item2;
     String[] categories = { "Еда", "Транспорт", "Развлечения", "Работа", "Учеба", "Дом", "Одежда", "Спорт", "Здоровье", "Остальное"};
-    String[] currencies = {"RUB", "EUR", "USD", "NOK", "JPY"};
+    String[] currencies = {"RUB"};
 
     Uri selectedImage;
     private static final String readExternalStorage;
@@ -177,7 +177,6 @@ public class EditExpenseActivity extends AppCompatActivity {
         if(photoUri!= null) {
             Uri photo = Uri.parse(photoUri);
             imageView.setImageURI(photo);
-
         }
 
         //Получение фотографии из галереи
@@ -215,6 +214,11 @@ public class EditExpenseActivity extends AppCompatActivity {
                 int price_new = Integer.parseInt(priceinput.getText().toString());
                 String description_new  = descriptionInput.getText().toString();
                 String dateExp_new  = timeInput.getText().toString();
+                String photoUri_new = photoUri;
+                if (selectedImage!=null) {
+                    photoUri_new = selectedImage.toString();
+                }
+
 
                 realm.beginTransaction();
                 Expense expense = realm.createObject(Expense.class);
@@ -223,6 +227,7 @@ public class EditExpenseActivity extends AppCompatActivity {
                 expense.setDescription(description_new);
                 expense.setDateExp(dateExp_new);
                 expense.setCategory(item);
+                expense.setPhoto_uri(photoUri_new);
 
                 realm.commitTransaction();
                 Toast.makeText(getApplicationContext(), "Расход сохранен", Toast.LENGTH_SHORT).show();

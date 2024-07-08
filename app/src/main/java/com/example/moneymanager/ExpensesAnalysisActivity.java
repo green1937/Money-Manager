@@ -118,7 +118,7 @@ public class ExpensesAnalysisActivity extends AppCompatActivity {
             info2 = info2.concat("Расходы в категории 'Развлечения' были превышены за текущий период на " + diff + ". ");
         }
         if (priceCurrPeriodCtg4 > currPeriodLimit4) {
-            diff = priceCurrPeriodCtg1 - currPeriodLimit1;
+            diff = priceCurrPeriodCtg4 - currPeriodLimit4;
             info2 = info2.concat("Расходы в категории 'Работа' были превышены за текущий период на " + diff + ". ");
         }
         if (priceCurrPeriodCtg5 > currPeriodLimit5) {

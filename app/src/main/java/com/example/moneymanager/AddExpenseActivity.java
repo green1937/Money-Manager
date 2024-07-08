@@ -298,7 +298,10 @@ public class AddExpenseActivity extends AppCompatActivity {
         Button saveBtn = findViewById(R.id.savebtn);
         Realm.init(getApplicationContext());
         Realm realm = Realm.getDefaultInstance();
-        String photoUri = selectedImage.toString();
+        String photoUri = "";
+        if (selectedImage!=null) {
+            photoUri = selectedImage.toString();
+        }
         int price = Integer.parseInt(priceinput.getText().toString());
         String description = descriptionInput.getText().toString();
         String dateExp = timeInput.getText().toString();
