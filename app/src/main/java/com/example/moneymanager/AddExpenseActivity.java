@@ -13,13 +13,51 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+//import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import io.realm.Realm;
+import okhttp3.OkHttpClient;
+//import retrofit2.Call;
+//import retrofit2.Callback;
+//import retrofit2.Response;
+import retrofit2.http.GET;
+
+
+//import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+import okhttp3.Call;
+import okhttp3.Callback;
+
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class AddExpenseActivity extends AppCompatActivity {
+
     CalendarView calender;
     EditText eTxt;
     String item;
@@ -27,6 +65,15 @@ public class AddExpenseActivity extends AppCompatActivity {
     String[] categories = { "Еда", "Транспорт", "Развлечения", "Работа", "Учеба", "Здоровье", "Остальное"};
     String[] currencies = {"RUB", "EUR", "USD", "NOK", "JPY"};
     Uri selectedImage;
+    //String eurT;
+    Double usdValue, eurValue, nokValue, jpyValue;
+
+
+    Button get;
+    TextView answer;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,27 +161,49 @@ public class AddExpenseActivity extends AppCompatActivity {
                 startActivityForResult(intent, 3);
             }
         });
-        System.out.println("seeeeeee 2 ----- " + selectedImage);
 
-
-        EditText priceinput = findViewById(R.id.priceinput);
+        /*EditText priceinput = findViewById(R.id.priceinput);
         EditText descriptionInput = findViewById(R.id.descriptioninput);
-        EditText timeInput = eTxt;
+        EditText timeInput = eTxt;*/
         Button saveBtn = findViewById(R.id.savebtn);
 
-        Realm.init(getApplicationContext());
-        Realm realm = Realm.getDefaultInstance();
-
+        //Realm.init(getApplicationContext());
+        //Realm realm = Realm.getDefaultInstance();
+        answer = findViewById(R.id.answer);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("seeeeeee 3 ----- " + selectedImage);
+                int flag=1;
+                try {
+                    getHttpResponse();
+                    System.out.println("eqwdfdg1");
+                    flag=0;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                /*System.out.println("eqwdfdg2");
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 String photoUri = selectedImage.toString();
-                System.out.println("seeeeeee 4 ----- " + photoUri);
                 int price = Integer.parseInt(priceinput.getText().toString());
                 String description = descriptionInput.getText().toString();
                 String dateExp = timeInput.getText().toString();
+                System.out.println("eqwdfdg3" + eurValue + "price" + price);
+                if ((!item2.equals("RUB")) && (flag==0)) { //если валюта выбрана не рубли, то переводим в рубли
+                    if (item2.equals("EUR"))  price = (int) Math.round( price * eurValue);
+                    if (item2.equals("USD"))  price = (int) Math.round( price * usdValue);
+                    if (item2.equals("NOK"))  price = (int) Math.round( price * nokValue);
+                    if (item2.equals("JPY"))  price = (int) Math.round( price * jpyValue);
+                }
+                if (flag==1) {
+                    Toast.makeText(getApplicationContext(), "Текущий расход будет сохранен в валюте рубли!", Toast.LENGTH_SHORT).show();
+                }
 
+                item2="RUB";
                 realm.beginTransaction();
                 Expense expense = realm.createObject(Expense.class);
                 expense.setPrice(price);
@@ -145,12 +214,117 @@ public class AddExpenseActivity extends AppCompatActivity {
                 expense.setCategory(item);
 
                 realm.commitTransaction();
-                Toast.makeText(getApplicationContext(), "Expense saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Расход сохранен", Toast.LENGTH_SHORT).show();
                 finish();
+                */
+            }
+        });
+
+
+    }
+
+    public void getHttpResponse() throws IOException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        Request request = new Request.Builder()
+                .url("http://www.cbr-xml-daily.ru/daily_json.js")
+                .method("GET", null)
+                .addHeader("Cookie", "__cfduid=dc5403bef7ac2ab2cb8ead288d39f653e1586600122")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            // если запрос неудачный
+            @Override
+            public void onFailure(Call call, IOException e) {
+                final String mMessage = e.getMessage().toString();
+                System.out.println("ASDFGFHHGGGGGGGGGGGGGGGGGGGGGGGGGGGG" + mMessage);
+                 answer.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        answer.setText(mMessage);
+                    }
+                });
+
+            }
+
+            // В случае успешного запроса
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String mMessage = response.body().string();
+
+                try {
+                    JSONObject json = new JSONObject(mMessage);
+                    JSONObject json2 = json.getJSONObject("Valute");
+                    JSONObject usd = json2.getJSONObject("USD");
+                    JSONObject eur = json2.getJSONObject("EUR");
+                    JSONObject nok = json2.getJSONObject("NOK");
+                    JSONObject jpy = json2.getJSONObject("JPY");
+
+                    String usdT = usd.getString("Value");
+                    String eurT = eur.getString("Value");
+                    String nokT = nok.getString("Value");
+                    String jpyT = jpy.getString("Value");
+                    System.out.println("ASDFGFHHGGGGGGGGGGGGGGGGGGGGGGGGGGGG" + jpyT);
+                    checkCurrency(usdT, eurT, nokT, jpyT);
+
+                    // Выводим значение
+
+                    answer.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            answer.setText(usdT);
+                            System.out.println(eurT + "  " + nokT + "  " + jpyT);
+
+                        }
+                    });
+
+
+                } catch (JSONException e) {
+                    //
+                }
             }
         });
     }
 
+
+    public void checkCurrency(String usdT, String eurT, String nokT, String jpyT) {
+        eurValue = Double.valueOf(eurT);
+        usdValue = Double.valueOf(usdT);
+        nokValue = Double.valueOf(nokT);
+        jpyValue = Double.valueOf(jpyT);
+        System.out.println("eqwdfdg0" + eurValue);
+        EditText priceinput = findViewById(R.id.priceinput);
+        EditText descriptionInput = findViewById(R.id.descriptioninput);
+        EditText timeInput = eTxt;
+        Button saveBtn = findViewById(R.id.savebtn);
+        Realm.init(getApplicationContext());
+        Realm realm = Realm.getDefaultInstance();
+        String photoUri = selectedImage.toString();
+        int price = Integer.parseInt(priceinput.getText().toString());
+        String description = descriptionInput.getText().toString();
+        String dateExp = timeInput.getText().toString();
+        System.out.println("eqwdfdg3" + eurValue + "price" + price);
+        if (!item2.equals("RUB")) { //если валюта выбрана не рубли, то переводим в рубли
+            if (item2.equals("EUR"))  price = (int) Math.round( price * eurValue);
+            if (item2.equals("USD"))  price = (int) Math.round( price * usdValue);
+            if (item2.equals("NOK"))  price = (int) Math.round( price * nokValue);
+            if (item2.equals("JPY"))  price = (int) Math.round( price * jpyValue);
+        }
+
+        item2="RUB";
+        realm.beginTransaction();
+        Expense expense = realm.createObject(Expense.class);
+        expense.setPrice(price);
+        expense.setCurrency(item2);
+        expense.setPhoto_uri(photoUri);
+        expense.setDescription(description);
+        expense.setDateExp(dateExp);
+        expense.setCategory(item);
+
+        realm.commitTransaction();
+        //Toast.makeText(getApplicationContext(), "Расход сохранен", Toast.LENGTH_SHORT).show();
+        finish();
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -160,8 +334,6 @@ public class AddExpenseActivity extends AppCompatActivity {
             imageView.setImageURI(selectedImage);
             System.out.println("seeeeeee 1 ----- " + selectedImage);
         }
-
-
-
     }
+
 }
