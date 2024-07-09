@@ -27,8 +27,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
@@ -59,7 +64,7 @@ import okhttp3.Response;
 public class AddExpenseActivity extends AppCompatActivity {
 
     CalendarView calender;
-    EditText eTxt;
+    EditText timeInput;
     String item;
     String item2;
     String[] categories = { "Еда", "Транспорт", "Развлечения", "Работа", "Учеба", "Здоровье", "Остальное"};
@@ -67,6 +72,10 @@ public class AddExpenseActivity extends AppCompatActivity {
     Uri selectedImage;
     //String eurT;
     Double usdValue, eurValue, nokValue, jpyValue;
+
+    EditText priceinput;
+    EditText descriptionInput;
+
 
 
     Button get;
@@ -81,23 +90,23 @@ public class AddExpenseActivity extends AppCompatActivity {
 
 
         calender = (CalendarView) findViewById(R.id.calendarView1);
-        eTxt = (EditText) findViewById(R.id.timeexpensetext);
+        timeInput = (EditText) findViewById(R.id.timeexpensetext);
         calender.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 // TODO Auto-generated method stub
                 if ((month + 1 < 10) &&(dayOfMonth >= 10)) {
-                    eTxt.setText(dayOfMonth + ".0" + (month + 1) + "." + year);
+                    timeInput.setText(dayOfMonth + ".0" + (month + 1) + "." + year);
                 }
                 if ((dayOfMonth < 10) && (month + 1 < 10)) {
-                    eTxt.setText("0" + dayOfMonth + ".0" + (month + 1) + "." + year);
+                    timeInput.setText("0" + dayOfMonth + ".0" + (month + 1) + "." + year);
                 }
                 if ((month + 1 >= 10) && (dayOfMonth < 10)) {
-                    eTxt.setText("0" + dayOfMonth + "." + (month + 1) + "." + year);
+                    timeInput.setText("0" + dayOfMonth + "." + (month + 1) + "." + year);
                 }
                 if ((month + 1 >= 10) && (dayOfMonth >= 10)) {
-                    eTxt.setText(dayOfMonth + "." + (month + 1) + "." + year);
+                    timeInput.setText(dayOfMonth + "." + (month + 1) + "." + year);
                 }
             }
 
@@ -130,22 +139,18 @@ public class AddExpenseActivity extends AppCompatActivity {
 
 
         Spinner spinner2 = findViewById(R.id.currencyinput);
-        // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
         ArrayAdapter<String> adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, currencies);
-        // Определяем разметку для использования при выборе элемента
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Применяем адаптер к элементу spinner
         spinner2.setAdapter(adapter2);
         AdapterView.OnItemSelectedListener itemSelectedListener2 = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                // Получаем выбранный объект
                 item2 = (String)parent.getItemAtPosition(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                //
             }
         };
         spinner2.setOnItemSelectedListener(itemSelectedListener2);
@@ -162,66 +167,31 @@ public class AddExpenseActivity extends AppCompatActivity {
             }
         });
 
-        /*EditText priceinput = findViewById(R.id.priceinput);
-        EditText descriptionInput = findViewById(R.id.descriptioninput);
-        EditText timeInput = eTxt;*/
+        priceinput = findViewById(R.id.priceinput);
+        descriptionInput = findViewById(R.id.descriptioninput);
         Button saveBtn = findViewById(R.id.savebtn);
 
-        //Realm.init(getApplicationContext());
-        //Realm realm = Realm.getDefaultInstance();
         answer = findViewById(R.id.answer);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int flag=1;
-                try {
-                    getHttpResponse();
-                    System.out.println("eqwdfdg1");
-                    flag=0;
+                if (!item2.equals("RUB")){
+                    try {
+                        getHttpResponse();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                /*System.out.println("eqwdfdg2");
-                try {
-                    TimeUnit.SECONDS.sleep(2);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                else {
+                    int price = Integer.parseInt(priceinput.getText().toString());
+                    saveExp(price);
                 }
-                String photoUri = selectedImage.toString();
-                int price = Integer.parseInt(priceinput.getText().toString());
-                String description = descriptionInput.getText().toString();
-                String dateExp = timeInput.getText().toString();
-                System.out.println("eqwdfdg3" + eurValue + "price" + price);
-                if ((!item2.equals("RUB")) && (flag==0)) { //если валюта выбрана не рубли, то переводим в рубли
-                    if (item2.equals("EUR"))  price = (int) Math.round( price * eurValue);
-                    if (item2.equals("USD"))  price = (int) Math.round( price * usdValue);
-                    if (item2.equals("NOK"))  price = (int) Math.round( price * nokValue);
-                    if (item2.equals("JPY"))  price = (int) Math.round( price * jpyValue);
-                }
-                if (flag==1) {
-                    Toast.makeText(getApplicationContext(), "Текущий расход будет сохранен в валюте рубли!", Toast.LENGTH_SHORT).show();
-                }
-
-                item2="RUB";
-                realm.beginTransaction();
-                Expense expense = realm.createObject(Expense.class);
-                expense.setPrice(price);
-                expense.setCurrency(item2);
-                expense.setPhoto_uri(photoUri);
-                expense.setDescription(description);
-                expense.setDateExp(dateExp);
-                expense.setCategory(item);
-
-                realm.commitTransaction();
                 Toast.makeText(getApplicationContext(), "Расход сохранен", Toast.LENGTH_SHORT).show();
-                finish();
-                */
             }
         });
-
-
     }
+
 
     public void getHttpResponse() throws IOException {
         OkHttpClient client = new OkHttpClient().newBuilder()
@@ -236,21 +206,18 @@ public class AddExpenseActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 final String mMessage = e.getMessage().toString();
-                System.out.println("ASDFGFHHGGGGGGGGGGGGGGGGGGGGGGGGGGGG" + mMessage);
                  answer.post(new Runnable() {
                     @Override
                     public void run() {
                         answer.setText(mMessage);
                     }
                 });
-
             }
 
             // В случае успешного запроса
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String mMessage = response.body().string();
-
                 try {
                     JSONObject json = new JSONObject(mMessage);
                     JSONObject json2 = json.getJSONObject("Valute");
@@ -263,20 +230,21 @@ public class AddExpenseActivity extends AppCompatActivity {
                     String eurT = eur.getString("Value");
                     String nokT = nok.getString("Value");
                     String jpyT = jpy.getString("Value");
-                    System.out.println("ASDFGFHHGGGGGGGGGGGGGGGGGGGGGGGGGGGG" + jpyT);
-                    checkCurrency(usdT, eurT, nokT, jpyT);
+                    //checkCurrency(usdT, eurT, nokT, jpyT);
+                    eurValue = Double.valueOf(eurT);
+                    usdValue = Double.valueOf(usdT);
+                    nokValue = Double.valueOf(nokT);
+                    jpyValue = Double.valueOf(jpyT);
 
-                    // Выводим значение
+                    int price = Integer.parseInt(priceinput.getText().toString());
 
-                    answer.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            answer.setText(usdT);
-                            System.out.println(eurT + "  " + nokT + "  " + jpyT);
+                    //если валюта выбрана не рубли, то переводим в рубли
+                    if (item2.equals("EUR"))  price = (int) Math.round( price * eurValue);
+                    if (item2.equals("USD"))  price = (int) Math.round( price * usdValue);
+                    if (item2.equals("NOK"))  price = (int) Math.round( price * nokValue);
+                    if (item2.equals("JPY"))  price = (int) Math.round( price * jpyValue);
 
-                        }
-                    });
-
+                    saveExp(price);
 
                 } catch (JSONException e) {
                     //
@@ -286,34 +254,39 @@ public class AddExpenseActivity extends AppCompatActivity {
     }
 
 
-    public void checkCurrency(String usdT, String eurT, String nokT, String jpyT) {
-        eurValue = Double.valueOf(eurT);
-        usdValue = Double.valueOf(usdT);
-        nokValue = Double.valueOf(nokT);
-        jpyValue = Double.valueOf(jpyT);
-        System.out.println("eqwdfdg0" + eurValue);
-        EditText priceinput = findViewById(R.id.priceinput);
-        EditText descriptionInput = findViewById(R.id.descriptioninput);
-        EditText timeInput = eTxt;
-        Button saveBtn = findViewById(R.id.savebtn);
+    public void saveExp(int price) {
         Realm.init(getApplicationContext());
         Realm realm = Realm.getDefaultInstance();
+
         String photoUri = "";
         if (selectedImage!=null) {
             photoUri = selectedImage.toString();
         }
-        int price = Integer.parseInt(priceinput.getText().toString());
+
         String description = descriptionInput.getText().toString();
         String dateExp = timeInput.getText().toString();
-        System.out.println("eqwdfdg3" + eurValue + "price" + price);
-        if (!item2.equals("RUB")) { //если валюта выбрана не рубли, то переводим в рубли
-            if (item2.equals("EUR"))  price = (int) Math.round( price * eurValue);
-            if (item2.equals("USD"))  price = (int) Math.round( price * usdValue);
-            if (item2.equals("NOK"))  price = (int) Math.round( price * nokValue);
-            if (item2.equals("JPY"))  price = (int) Math.round( price * jpyValue);
+        item2="RUB";
+        if(dateExp.equals("Выберите дату") || dateExp.equals("")) {
+            Date currentDate = new Date();
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+            dateExp = dateFormat.format(currentDate);
         }
 
-        item2="RUB";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+        sdf.setLenient(false);
+        try {
+            sdf.parse(dateExp);
+            System.out.println("Valid date");
+        } catch (ParseException e) {
+            System.out.println("Invalid date");
+            Date currentDate = new Date();
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+            dateExp = dateFormat.format(currentDate);
+        }
+
+
+
         realm.beginTransaction();
         Expense expense = realm.createObject(Expense.class);
         expense.setPrice(price);
@@ -322,12 +295,11 @@ public class AddExpenseActivity extends AppCompatActivity {
         expense.setDescription(description);
         expense.setDateExp(dateExp);
         expense.setCategory(item);
-
         realm.commitTransaction();
-        //Toast.makeText(getApplicationContext(), "Расход сохранен", Toast.LENGTH_SHORT).show();
         finish();
-
     }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -335,7 +307,6 @@ public class AddExpenseActivity extends AppCompatActivity {
             selectedImage = data.getData();
             ImageView imageView = findViewById(R.id.photoInput);
             imageView.setImageURI(selectedImage);
-            System.out.println("seeeeeee 1 ----- " + selectedImage);
         }
     }
 

@@ -56,7 +56,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                             realm.beginTransaction();
                             expense.deleteFromRealm();
                             realm.commitTransaction();
-                            Toast.makeText(context, "Расход удалена", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Расход удален", Toast.LENGTH_SHORT).show();
                         }
                         return true;
                     }
