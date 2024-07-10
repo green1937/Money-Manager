@@ -14,10 +14,12 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class TableActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -51,7 +53,7 @@ public class TableActivity extends AppCompatActivity {
     private RealmResults<Expense> getList() {
         Realm.init(getApplicationContext());
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Expense> expensesList = realm.where(Expense.class).findAll();
+        RealmResults<Expense> expensesList = realm.where(Expense.class).sort("price", Sort.ASCENDING).findAll();
         return expensesList;
     }
 

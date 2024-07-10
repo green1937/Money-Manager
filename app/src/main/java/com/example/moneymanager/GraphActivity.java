@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,15 +20,22 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -36,12 +44,18 @@ public class GraphActivity extends AppCompatActivity {
     int pricePoint;
     String[] categories = { "Еда", "Транспорт", "Развлечения", "Работа", "Учеба", "Здоровье", "Остальное"};
     String item;
+    String dateStart, dateEnd;
+    LocalDate startLocalDate, endLocalDate;
+    LineChart lineChartForDate;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US);
+    ArrayList<Entry> entiersDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualization_graph);
 
+        lineChartForDate = findViewById(R.id.lineChartForDate);
 
         Realm.init(getApplicationContext());
         Realm realm = Realm.getDefaultInstance();
@@ -145,6 +159,96 @@ public class GraphActivity extends AppCompatActivity {
             }
         });
 
+
+        MaterialButton startDateBtn = findViewById(R.id.DateStart);
+        MaterialButton endDateBtn = findViewById(R.id.DateEnd);
+        TextView startDateView = findViewById(R.id.tvStart);
+        TextView endDateView = findViewById(R.id.tvEnd);
+
+        Button dateBtn = findViewById(R.id.dateBtn);
+
+
+        startLocalDate = LocalDate.now(); //Сегодняшняя дата
+        dateStart = startLocalDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        dateEnd = dateStart;
+        startDateView.setText(dateStart);
+        endDateView.setText(dateEnd);
+        entiersDate = new ArrayList<>();
+        entiersDate.add(new Entry(0, 0));
+        RealmResults<Expense> expDate = realm.where(Expense.class).equalTo("dateExp", dateStart).findAll();
+        i=1;
+        for (Expense expense : expDate) {
+            pricePoint = expense.getPrice();
+            entiersDate.add(new Entry(i, pricePoint));
+            i+=1;
+        }
+        drawGraphForDate(entiersDate);
+
+
+        startDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker()
+                        .setTitleText("Выберите дату начала").setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                        .build();
+                materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+                    @Override
+                    public void onPositiveButtonClick(Long selection) {
+                        dateStart = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date(selection));
+                        startDateView.setText(MessageFormat.format("{0}", dateStart));
+                    }
+                });
+                materialDatePicker.show(getSupportFragmentManager(), "tag");
+            }
+        });
+
+        endDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker()
+                        .setTitleText("Выберите дату конца").setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                        .build();
+                materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+                    @Override
+                    public void onPositiveButtonClick(Long selection) {
+                        dateEnd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date(selection));
+                        endDateView.setText(MessageFormat.format("{0}", dateEnd));
+                    }
+                });
+                materialDatePicker.show(getSupportFragmentManager(), "tag");
+            }
+        });
+
+        dateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dateStart.compareTo(dateEnd) > 0) { //Если дата начала больше даты конца -> меняем местами
+                    String s = dateStart;
+                    dateStart = dateEnd;
+                    dateEnd = s;
+                }
+
+                startLocalDate = LocalDate.parse(dateStart, formatter);
+                endLocalDate = LocalDate.parse(dateEnd, formatter);
+                entiersDate = new ArrayList<>();
+                int i = 1;
+                entiersDate.add(new Entry(0, 0));
+                endLocalDate = endLocalDate.plusDays(1);
+                while(startLocalDate.isBefore(endLocalDate)) {
+                    String date = startLocalDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                    RealmResults<Expense> expDate = realm.where(Expense.class).equalTo("dateExp", date).findAll();
+
+                    for (Expense expense : expDate) {
+                        pricePoint = expense.getPrice();
+                        entiersDate.add(new Entry(i, pricePoint));
+                        i+=1;
+                    }
+                    startLocalDate = startLocalDate.plusDays(1);
+                }
+                drawGraphForDate(entiersDate);
+            }
+        });
+
         ImageButton menuBtn = findViewById(R.id.menu);
         menuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +256,19 @@ public class GraphActivity extends AppCompatActivity {
                 startActivity(new Intent(GraphActivity.this, MenuActivity.class));
             }
         });
+    }
+
+
+    public void drawGraphForDate(ArrayList<Entry> entiersDate) {
+        LineDataSet lineDataSet = new LineDataSet(entiersDate, "Расходы по выбранным датам");
+        lineDataSet.setColors(Color.rgb(70, 250, 121));
+        lineDataSet.setCircleColor(Color.BLACK);
+        LineData lineData = new LineData(lineDataSet);
+        lineChartForDate.setData(lineData);
+        lineChartForDate.getDescription().setEnabled(false);
+        lineChartForDate.getLegend().setTextSize(8);
+        lineChartForDate.animateY(1000);
+        lineChartForDate.invalidate();
     }
 
 }

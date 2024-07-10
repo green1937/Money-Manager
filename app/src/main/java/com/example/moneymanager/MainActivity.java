@@ -88,10 +88,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Получение данных
                 Bundle bundle = getIntent().getExtras();
-                price1Filt = bundle.getInt("price1Filt");
-                price2Filt = bundle.getInt("price2Filt");
-                ctgFilt = bundle.getString("ctgFilt");
-                dateFilt = bundle.getString("dateFilt");
+                if(bundle.equals("null")) {
+                    price1Filt=0;
+                    price2Filt=0;
+                    ctgFilt="Все";
+                    dateFilt=null;
+                }
+                else {
+                    price1Filt = bundle.getInt("price1Filt");
+                    price2Filt = bundle.getInt("price2Filt");
+                    ctgFilt = bundle.getString("ctgFilt");
+                    dateFilt = bundle.getString("dateFilt");
+                }
                 System.out.println("see filer DATA = " + price1Filt + "   " + price2Filt + "   " + ctgFilt + "   " + dateFilt);
                 System.out.println(price1Filt + "   " + price2Filt);
                 if(price1Filt > price2Filt) {

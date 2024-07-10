@@ -41,31 +41,59 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <Button
-                    android:id="@+id/filterBtn"
+                <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Фильтрация"
-                    android:textSize="17dp"
-                    android:backgroundTint="#FFA727"
-                    android:layout_marginLeft="20dp"
-                    android:paddingHorizontal="45dp"/>
-                <ImageButton
-                    android:layout_width="wrap_content"
+                    android:id="@+id/DateStart"
+                    android:backgroundTint="#FFCB80"
+                    android:text="От"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="40dp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/yesBtn"
-                    android:src="@drawable/yes"
-                    android:layout_toLeftOf="@+id/noBtn"
-                    android:backgroundTint="#FFF6EF"/>
+                    android:id="@+id/tvStart"
+                    android:text="startDate"
+                    android:textStyle="normal"
+                    android:textSize="20dp"
+                    android:padding="10dp"
+                    android:layout_toRightOf="@+id/DateStart"
+                    android:textAlignment="center"/>
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/noBtn"
-                    android:src="@drawable/no"
-                    android:layout_marginEnd="20dp"
-                    android:backgroundTint="#FFF6EF"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_below="@id/DateStart"
+                    android:id="@+id/DateEnd"
+                    android:backgroundTint="#FFCB80"
+                    android:text="До"
+                    android:textColor="@color/black"
+                    android:padding="0dp"
+                    android:layout_marginLeft="40dp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvStart"
+                    android:id="@+id/tvEnd"
+                    android:text="endDate"
+                    android:textStyle="normal"
+                    android:textSize="20dp"
+                    android:padding="10dp"
+                    android:layout_toRightOf="@+id/DateEnd"
+                    android:textAlignment="center"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dateBtn"
+                    android:backgroundTint="#FFA727"
+                    android:layout_gravity="center"
+                    android:text="Выбрать"
+                    android:textSize="17dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_below="@+id/DateEnd"/>
             </RelativeLayout>
 
             <com.github.mikephil.charting.charts.PieChart
