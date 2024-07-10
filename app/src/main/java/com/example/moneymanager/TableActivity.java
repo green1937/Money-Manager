@@ -27,21 +27,6 @@ public class TableActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualization_table);
 
-        Button barBtn = findViewById(R.id.diagramBtn);
-        barBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(TableActivity.this, BarActivity.class));
-            }
-        });
-
-        Button graphBtn = findViewById(R.id.graphBtn);
-        graphBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(TableActivity.this, GraphActivity.class));
-            }
-        });
 
         ImageButton menuBtn = findViewById(R.id.menu);
         menuBtn.setOnClickListener(new View.OnClickListener() {

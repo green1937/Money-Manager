@@ -29,7 +29,6 @@ import java.util.List;
 import io.realm.Realm;
 
 public class BarActivity extends AppCompatActivity {
-    GraphView graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,21 +104,6 @@ public class BarActivity extends AppCompatActivity {
 
 
 
-        Button tableBtn = findViewById(R.id.tableBtn);
-        tableBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(BarActivity.this, TableActivity.class));
-            }
-        });
-
-        Button graphBtn = findViewById(R.id.graphBtn);
-        graphBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(BarActivity.this, GraphActivity.class));
-            }
-        });
 
         ImageButton menuBtn = findViewById(R.id.menu);
         menuBtn.setOnClickListener(new View.OnClickListener() {

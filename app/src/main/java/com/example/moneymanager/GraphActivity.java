@@ -145,24 +145,6 @@ public class GraphActivity extends AppCompatActivity {
             }
         });
 
-
-
-        Button barBtn = findViewById(R.id.diagramBtn);
-        barBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(GraphActivity.this, BarActivity.class));
-            }
-        });
-
-        Button tableBtn = findViewById(R.id.tableBtn);
-        tableBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(GraphActivity.this, TableActivity.class));
-            }
-        });
-
         ImageButton menuBtn = findViewById(R.id.menu);
         menuBtn.setOnClickListener(new View.OnClickListener() {
             @Override

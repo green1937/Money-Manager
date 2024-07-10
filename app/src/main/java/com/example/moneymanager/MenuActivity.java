@@ -60,11 +60,29 @@ public class MenuActivity extends AppCompatActivity {
         });
 
 
-        Button visualizationBtn = findViewById(R.id.viewExpenses);
-        visualizationBtn.setOnClickListener(new View.OnClickListener() {
+        Button graphBtn = findViewById(R.id.viewExpensesGraph);
+        graphBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MenuActivity.this, GraphActivity.class));
+            }
+        });
+
+
+        Button barBtn = findViewById(R.id.viewExpensesBar);
+        barBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuActivity.this, BarActivity.class));
+            }
+        });
+
+
+        Button tableBtn = findViewById(R.id.viewExpensesTable);
+        tableBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuActivity.this,TableActivity.class));
             }
         });
 

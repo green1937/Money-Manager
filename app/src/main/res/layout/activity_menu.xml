@@ -19,14 +19,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
-        android:id="@+id/viewExpenses"
-        android:text="Визуализация расходов"
+        android:id="@+id/viewExpensesGraph"
+        android:text="График расходов"
         android:textColor="@color/black"
         android:textSize="25dp"
         android:textAlignment="center"
         android:textStyle="normal"
         android:padding="6dp"
         android:backgroundTint="#FFD1A9" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:id="@+id/viewExpensesBar"
+        android:text="Диаграмма расходов"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        android:textAlignment="center"
+        android:textStyle="normal"
+        android:padding="6dp"
+        android:backgroundTint="#FFD1A9"
+        android:layout_below="@+id/viewExpensesGraph"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewExpensesTable"
+        android:text="Таблица расходов"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        android:textAlignment="center"
+        android:textStyle="normal"
+        android:padding="6dp"
+        android:backgroundTint="#FFD1A9"
+        android:layout_below="@+id/viewExpensesBar"/>
 
     <Button
         android:layout_width="match_parent"
@@ -40,7 +67,7 @@
         android:textStyle="normal"
         android:padding="6dp"
         android:backgroundTint="#FFD1A9"
-        android:layout_below="@+id/viewExpenses"/>
+        android:layout_below="@+id/viewExpensesTable"/>
 
     <Button
         android:layout_width="match_parent"

@@ -26,33 +26,43 @@
         android:padding="6dp"
         android:background="#FFD1A9"
         android:layout_toRightOf="@+id/menu"/>
+
     <Button
-        android:id="@+id/graphBtn"
+        android:id="@+id/filterBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="График"
+        android:text="Фильтрация"
         android:textSize="17dp"
         android:layout_below="@+id/mainTitle"
         android:layout_alignParentLeft="true"
         android:backgroundTint="#FFA727"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:paddingHorizontal="50dp"/>
-    <Button
-        android:id="@+id/diagramBtn"
+
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Диаграмма"
-        android:textSize="17dp"
+        android:id="@+id/yesBtn"
+        android:src="@drawable/yes"
         android:layout_below="@+id/mainTitle"
-        android:layout_alignParentRight="true"
-        android:backgroundTint="#FFA727"
+        android:layout_toLeftOf="@+id/noBtn"
+        android:backgroundTint="#FFF6EF"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/noBtn"
+        android:src="@drawable/no"
+        android:layout_below="@+id/mainTitle"
         android:layout_marginEnd="20dp"
-        android:paddingHorizontal="33dp"/>
+        android:backgroundTint="#FFF6EF"
+        android:layout_alignParentRight="true"/>
+
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/graphBtn"
+        android:layout_below="@id/filterBtn"
         android:stretchColumns="1,2,3">
 
         <TableRow>
