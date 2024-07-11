@@ -26,6 +26,13 @@
         android:padding="6dp"
         android:background="#FFD1A9"
         android:layout_toRightOf="@+id/menu"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exportBtn"
+        android:src="@drawable/save"
+        android:backgroundTint="#FFD1A9"
+        android:layout_alignParentRight="true"/>
 
     <Button
         android:id="@+id/filterBtn"
@@ -67,7 +74,6 @@
         android:layout_below="@+id/filterBtn"
         android:padding="15dp"
         android:layout_marginBottom="20dp"/>
-
 
     <ImageButton
         android:layout_width="wrap_content"

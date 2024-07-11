@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -19,14 +20,11 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity {
     static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     RealmResults<Expense> expensesList; // глобальная переменная
-    int flag;
-    int price1Filt;
-    int price2Filt;
-    String ctgFilt;
-    String dateFilt;
+    int price1Filt, price2Filt;
+    String ctgFilt, dateFilt;
+    ImageButton exportBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        flag = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ImageButton menuBtn = findViewById(R.id.menu);
@@ -42,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         filterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flag = 1;
                 startActivity(new Intent(MainActivity.this, FilterActivity.class));
             }
         });
@@ -146,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
                     //фильтрация ТОЛЬКО по сумме (диапазон)
                     expensesList = realm.where(Expense.class).between("price", price1Filt, price2Filt).findAll();
                 }
-                System.out.println("---------------" + expensesList);
                 MyAdapter myAdapter = new MyAdapter(getApplicationContext(), expensesList);
                 recyclerView.setAdapter(myAdapter);
                 expensesList.addChangeListener(new RealmChangeListener<RealmResults<Expense>>() {
@@ -166,6 +162,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AddExpenseActivity.class));
             }
         });
-
+        exportBtn = findViewById(R.id.exportBtn);
+        exportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExportDataActivity.csvExport(expensesList, realm);
+                ExportDataActivity.xlsxExport(expensesList);
+                Toast.makeText(getApplicationContext(), "Данные экспортированы в файлы " +
+                        "с расширениями json, csv и xlsx в папку Загрузки",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
