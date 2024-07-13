@@ -62,6 +62,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class AddExpenseActivity extends AppCompatActivity {
+    Realm realm;
+    Period currentPeriod;
 
     CalendarView calender;
     EditText timeInput;
@@ -75,6 +77,8 @@ public class AddExpenseActivity extends AppCompatActivity {
 
     EditText priceinput;
     EditText descriptionInput;
+    ArrayList<Integer> limList, expListInCurrPeriod;
+    int index;
 
 
 
@@ -187,7 +191,36 @@ public class AddExpenseActivity extends AppCompatActivity {
                     int price = Integer.parseInt(priceinput.getText().toString());
                     saveExp(price);
                 }
-                Toast.makeText(getApplicationContext(), "Расход сохранен", Toast.LENGTH_SHORT).show();
+
+
+
+                Realm.init(getApplicationContext());
+                realm = Realm.getDefaultInstance();
+                currentPeriod = realm.where(Period.class).findAll().last(); //текущий период
+                limList = ExpensesAnalysisActivity.limitsInCurrPeriod(currentPeriod); //лимиты в текущем периоде
+                expListInCurrPeriod = ExpensesAnalysisActivity.expInCurrPeriod(currentPeriod); //все расходы по категориям в текущем периоде
+
+                for (int i =0; i <categories.length; i++) {
+                    if (categories[i].equals(item)) {
+                        index = i;
+                        break;
+                    }
+                }
+                int limitInCtg = limList.get(index);
+                int expPriceInCtg = expListInCurrPeriod.get(index);
+                double r = expPriceInCtg/0.8;
+                if (limitInCtg <= expPriceInCtg) {
+                    Toast.makeText(getApplicationContext(), "ПРЕВЫШЕНИЕ в категории "+ item, Toast.LENGTH_SHORT).show();
+                } else if (limitInCtg<=r) {
+                    Toast.makeText(getApplicationContext(), "В категории " + item + " истрачено более 80% от лимита", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Расход сохранен", Toast.LENGTH_SHORT).show();
+                }
+
+
+
+
             }
         });
     }
@@ -298,6 +331,7 @@ public class AddExpenseActivity extends AppCompatActivity {
         realm.commitTransaction();
         finish();
     }
+
 
 
     @Override
