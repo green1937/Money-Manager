@@ -68,105 +68,106 @@ public class BarActivity extends AppCompatActivity {
 
         Realm.init(getApplicationContext());
         Realm realm = Realm.getDefaultInstance();
+        if (realm.where(Period.class).findAll().size() > 0) {
 
-        priceCtg1 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Еда").findAll().sum("price").toString());
-        priceCtg2 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Транспорт").findAll().sum("price").toString());
-        priceCtg3 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Развлечения").findAll().sum("price").toString());
-        priceCtg4 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Работа").findAll().sum("price").toString());
-        priceCtg5 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Учеба").findAll().sum("price").toString());
-        priceCtg6 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Здоровье").findAll().sum("price").toString());
-        priceCtg7 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Остальное").findAll().sum("price").toString());
-
-
-        barChart = findViewById(R.id.graph);
-        drawBarChart(priceCtg1, priceCtg2, priceCtg3, priceCtg4, priceCtg5, priceCtg6, priceCtg7);
+            priceCtg1 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Еда").findAll().sum("price").toString());
+            priceCtg2 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Транспорт").findAll().sum("price").toString());
+            priceCtg3 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Развлечения").findAll().sum("price").toString());
+            priceCtg4 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Работа").findAll().sum("price").toString());
+            priceCtg5 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Учеба").findAll().sum("price").toString());
+            priceCtg6 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Здоровье").findAll().sum("price").toString());
+            priceCtg7 = Integer.parseInt(realm.where(Expense.class).equalTo("category", "Остальное").findAll().sum("price").toString());
 
 
-        //КРУГОВАЯ ДИАГРАММА
-        pieChart = findViewById(R.id.cyrcleDiagram);
-        drawPieChart(priceCtg1, priceCtg2, priceCtg3, priceCtg4, priceCtg5, priceCtg6, priceCtg7);
+            barChart = findViewById(R.id.graph);
+            drawBarChart(priceCtg1, priceCtg2, priceCtg3, priceCtg4, priceCtg5, priceCtg6, priceCtg7);
 
 
-
-        MaterialButton startDateBtn = findViewById(R.id.DateStart);
-        MaterialButton endDateBtn = findViewById(R.id.DateEnd);
-        TextView startDateView = findViewById(R.id.tvStart);
-        TextView endDateView = findViewById(R.id.tvEnd);
-
-        Button dateBtn = findViewById(R.id.dateBtn);
+            //КРУГОВАЯ ДИАГРАММА
+            pieChart = findViewById(R.id.cyrcleDiagram);
+            drawPieChart(priceCtg1, priceCtg2, priceCtg3, priceCtg4, priceCtg5, priceCtg6, priceCtg7);
 
 
-        startLocalDate = LocalDate.now(); //Сегодняшняя дата
-        dateStart = realm.where(Period.class).findAll().last().getDateStart();
-        dateEnd = startLocalDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        startDateView.setText("-");
-        endDateView.setText("-");
+            MaterialButton startDateBtn = findViewById(R.id.DateStart);
+            MaterialButton endDateBtn = findViewById(R.id.DateEnd);
+            TextView startDateView = findViewById(R.id.tvStart);
+            TextView endDateView = findViewById(R.id.tvEnd);
+
+            Button dateBtn = findViewById(R.id.dateBtn);
 
 
-        startDateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker()
-                        .setTitleText("Выберите дату начала").setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                        .build();
-                materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-                    @Override
-                    public void onPositiveButtonClick(Long selection) {
-                        dateStart = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date(selection));
-                        startDateView.setText(MessageFormat.format("{0}", dateStart));
-                    }
-                });
-                materialDatePicker.show(getSupportFragmentManager(), "tag");
-            }
-        });
+            startLocalDate = LocalDate.now(); //Сегодняшняя дата
+            dateStart = realm.where(Period.class).findAll().last().getDateStart();
+            dateEnd = startLocalDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            startDateView.setText("-");
+            endDateView.setText("-");
 
-        endDateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker()
-                        .setTitleText("Выберите дату конца").setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                        .build();
-                materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-                    @Override
-                    public void onPositiveButtonClick(Long selection) {
-                        dateEnd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date(selection));
-                        endDateView.setText(MessageFormat.format("{0}", dateEnd));
-                    }
-                });
-                materialDatePicker.show(getSupportFragmentManager(), "tag");
-            }
-        });
 
-        dateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dateStart.compareTo(dateEnd) > 0) { //Если дата начала больше даты конца -> меняем местами
-                    String s = dateStart;
-                    dateStart = dateEnd;
-                    dateEnd = s;
+            startDateBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker()
+                            .setTitleText("Выберите дату начала").setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                            .build();
+                    materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+                        @Override
+                        public void onPositiveButtonClick(Long selection) {
+                            dateStart = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date(selection));
+                            startDateView.setText(MessageFormat.format("{0}", dateStart));
+                        }
+                    });
+                    materialDatePicker.show(getSupportFragmentManager(), "tag");
                 }
-                startLocalDate = LocalDate.parse(dateStart, formatter);
-                endLocalDate = LocalDate.parse(dateEnd, formatter);
+            });
 
-                endLocalDate = endLocalDate.plusDays(1);
-                int priceCtg1 = 0, priceCtg2 = 0, priceCtg3 = 0, priceCtg4= 0, priceCtg5 = 0, priceCtg6 = 0, priceCtg7 = 0;
-                while(startLocalDate.isBefore(endLocalDate)) {
-                    String date = startLocalDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-
-                    priceCtg1 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Еда").equalTo("dateExp", date).findAll().sum("price").toString());
-                    priceCtg2 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Транспорт").equalTo("dateExp", date).findAll().sum("price").toString());
-                    priceCtg3 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Развлечения").equalTo("dateExp", date).findAll().sum("price").toString());
-                    priceCtg4 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Работа").equalTo("dateExp", date).findAll().sum("price").toString());
-                    priceCtg5 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Учеба").equalTo("dateExp", date).findAll().sum("price").toString());
-                    priceCtg6 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Здоровье").equalTo("dateExp", date).findAll().sum("price").toString());
-                    priceCtg7 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Остальное").equalTo("dateExp", date).findAll().sum("price").toString());
-
-                    startLocalDate = startLocalDate.plusDays(1);
+            endDateBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker()
+                            .setTitleText("Выберите дату конца").setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                            .build();
+                    materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+                        @Override
+                        public void onPositiveButtonClick(Long selection) {
+                            dateEnd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date(selection));
+                            endDateView.setText(MessageFormat.format("{0}", dateEnd));
+                        }
+                    });
+                    materialDatePicker.show(getSupportFragmentManager(), "tag");
                 }
-                drawBarChart(priceCtg1, priceCtg2, priceCtg3, priceCtg4, priceCtg5, priceCtg6, priceCtg7);
-                drawPieChart(priceCtg1, priceCtg2, priceCtg3, priceCtg4, priceCtg5, priceCtg6, priceCtg7);
-            }
-        });
+            });
+
+            dateBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dateStart.compareTo(dateEnd) > 0) { //Если дата начала больше даты конца -> меняем местами
+                        String s = dateStart;
+                        dateStart = dateEnd;
+                        dateEnd = s;
+                    }
+                    startLocalDate = LocalDate.parse(dateStart, formatter);
+                    endLocalDate = LocalDate.parse(dateEnd, formatter);
+
+                    endLocalDate = endLocalDate.plusDays(1);
+                    int priceCtg1 = 0, priceCtg2 = 0, priceCtg3 = 0, priceCtg4 = 0, priceCtg5 = 0, priceCtg6 = 0, priceCtg7 = 0;
+                    while (startLocalDate.isBefore(endLocalDate)) {
+                        String date = startLocalDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+
+                        priceCtg1 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Еда").equalTo("dateExp", date).findAll().sum("price").toString());
+                        priceCtg2 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Транспорт").equalTo("dateExp", date).findAll().sum("price").toString());
+                        priceCtg3 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Развлечения").equalTo("dateExp", date).findAll().sum("price").toString());
+                        priceCtg4 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Работа").equalTo("dateExp", date).findAll().sum("price").toString());
+                        priceCtg5 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Учеба").equalTo("dateExp", date).findAll().sum("price").toString());
+                        priceCtg6 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Здоровье").equalTo("dateExp", date).findAll().sum("price").toString());
+                        priceCtg7 += Integer.parseInt(realm.where(Expense.class).equalTo("category", "Остальное").equalTo("dateExp", date).findAll().sum("price").toString());
+
+                        startLocalDate = startLocalDate.plusDays(1);
+                    }
+                    drawBarChart(priceCtg1, priceCtg2, priceCtg3, priceCtg4, priceCtg5, priceCtg6, priceCtg7);
+                    drawPieChart(priceCtg1, priceCtg2, priceCtg3, priceCtg4, priceCtg5, priceCtg6, priceCtg7);
+                }
+            });
+        }
 
 
 

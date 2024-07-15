@@ -37,7 +37,7 @@
                 android:layout_toRightOf="@+id/menu"/>
         </RelativeLayout>
 
-        <TextView
+        <!-- <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Текущий период"
@@ -97,8 +97,16 @@
             android:textSize="20dp"
             android:hint="Анализ периода"
             android:textStyle="italic"/>
+            -->
 
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyclerviewAnalysis"
+            android:padding="15dp"
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
+
+
 </ScrollView>

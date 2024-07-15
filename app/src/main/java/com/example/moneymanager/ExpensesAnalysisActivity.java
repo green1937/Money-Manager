@@ -7,13 +7,19 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmModel;
+import io.realm.RealmResults;
 
 public class ExpensesAnalysisActivity extends AppCompatActivity {
     static Realm realm;
@@ -23,6 +29,10 @@ public class ExpensesAnalysisActivity extends AppCompatActivity {
     static LocalDate currLocalDate;
     Period currentPeriod;
     static ArrayList<Integer> limList, expListInCurrPeriod;
+    static ArrayList<String> dateEndForPeriods, infoAboutPeriod;
+
+    static ArrayList<ArrayList<Integer>> expListInPeriod;
+    int periodSize;
     static int allPriceCurrentPeriod, priceCurrPeriodCtg1, priceCurrPeriodCtg2, priceCurrPeriodCtg3,
             priceCurrPeriodCtg4, priceCurrPeriodCtg5, priceCurrPeriodCtg6, priceCurrPeriodCtg7;
     static int currPeriodLimit1, currPeriodLimit2, currPeriodLimit3, currPeriodLimit4,
@@ -37,76 +47,8 @@ public class ExpensesAnalysisActivity extends AppCompatActivity {
 
         Realm.init(getApplicationContext());
         realm = Realm.getDefaultInstance();
-        currentPeriod = realm.where(Period.class).findAll().last(); //текущий период
-
-
-        limList = limitsInCurrPeriod(currentPeriod);            // Лимиты
-        expListInCurrPeriod = expInCurrPeriod(currentPeriod);   // Все расходы в текущем периоде
-
-
-        // Вывод бюджета текущего периода и расходов за текущий период
-        EditText budgetText = findViewById(R.id.currPeriodBudget);
-        EditText allPriceExpText = findViewById(R.id.currPeriodExpPrice);
-        budgetText.setText(String.valueOf(currPeriodsBudget));
-        allPriceExpText.setText(String.valueOf(allPriceCurrentPeriod));
-
-
-        String info1 = "";  // Сообщения для пользователя
-        if (currPeriodsBudget < allPriceCurrentPeriod) {  // если расходы больше, чем бюджет
-            info1 = "Сумма расходов превысила бюджет! ";
-        }
-        else {
-            if (currPeriodsBudget == allPriceCurrentPeriod) {
-                info1 = "Сумма расходов равна бюджету. ";
-            }
-            else {
-                int diff = currPeriodsBudget - allPriceCurrentPeriod;
-                info1 = "Сумма расходов меньше бюджета, разница равна " + diff + ". ";
-            }
-        }
-
-        //Обработка расходов по категориям (вывод сообщений, если расходы превысили лимиты)
-        String info2 = "";
-        int diff = 0;
-        if (priceCurrPeriodCtg1 > currPeriodLimit1) {
-            diff = priceCurrPeriodCtg1 - currPeriodLimit1;
-            info2 = info2.concat("Расходы в категории 'Еда' были превышены за текущий период на " + diff + ". ");
-        }
-        if (priceCurrPeriodCtg2 > currPeriodLimit2) {
-            diff = priceCurrPeriodCtg2 - currPeriodLimit2;
-            info2 = info2.concat("Расходы в категории 'Транспорт' были превышены за текущий период на " + diff + ". ");
-        }
-        if (priceCurrPeriodCtg3 > currPeriodLimit3) {
-            diff = priceCurrPeriodCtg3 - currPeriodLimit3;
-            info2 = info2.concat("Расходы в категории 'Развлечения' были превышены за текущий период на " + diff + ". ");
-        }
-        if (priceCurrPeriodCtg4 > currPeriodLimit4) {
-            diff = priceCurrPeriodCtg4 - currPeriodLimit4;
-            info2 = info2.concat("Расходы в категории 'Работа' были превышены за текущий период на " + diff + ". ");
-        }
-        if (priceCurrPeriodCtg5 > currPeriodLimit5) {
-            diff = priceCurrPeriodCtg5 - currPeriodLimit5;
-            info2 = info2.concat("Расходы в категории 'Учеба' были превышены за текущий период на " + diff + ". ");
-        }
-        if (priceCurrPeriodCtg6 > currPeriodLimit6) {
-            diff = priceCurrPeriodCtg6 - currPeriodLimit6;
-            info2 = info2.concat("Расходы в категории 'Здоровье' были превышены за текущий период на " + diff + ". ");
-        }
-        if (priceCurrPeriodCtg7 > currPeriodLimit7) {
-            diff = priceCurrPeriodCtg7 - currPeriodLimit7;
-            info2 = info2.concat("Расходы в категории 'Остальное' были превышены за текущий период на " + diff + ". ");
-        }
-
-
-        System.out.println(info1);
-        System.out.println(info2);
-
-        String info = info1.concat(info2); //Объединение всех сообщений
-
-        EditText infoText = findViewById(R.id.currPeriodInfo);
-        infoText.setText(info);
-
-
+        dateEndForPeriods = new ArrayList<>();
+        infoAboutPeriod = new ArrayList<>();
 
         ImageButton menuBtn = findViewById(R.id.menu);
         menuBtn.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +57,31 @@ public class ExpensesAnalysisActivity extends AppCompatActivity {
                 startActivity(new Intent(ExpensesAnalysisActivity.this, MenuActivity.class));
             }
         });
+
+        expListInPeriod = new ArrayList<>();
+        RealmResults<Period> allPeriods = realm.where(Period.class).findAll();
+
+        for(Period onePeriod : allPeriods) {
+            expListInPeriod = getListOfExpInAllPeriod(onePeriod);
+            infoAboutPeriod = getInfoAboutPeriods(onePeriod);
+        }
+
+
+
+        Realm.init(getApplicationContext());
+        RecyclerView recyclerView = findViewById(R.id.recyclerviewAnalysis);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        AnalysisAdapter analysisAdapter = new AnalysisAdapter(getApplicationContext(), allPeriods, expListInPeriod, dateEndForPeriods, infoAboutPeriod);
+        recyclerView.setAdapter(analysisAdapter);
+        allPeriods.addChangeListener(new RealmChangeListener<RealmResults<Period>>() {
+            @Override
+            public void onChange(RealmResults<Period> period) {
+                analysisAdapter.notifyDataSetChanged();
+            }
+        });
+        System.out.println(allPeriods);
+
+
     }
 
     public static ArrayList<Integer> limitsInCurrPeriod(Period currentPeriod) {
@@ -143,14 +110,23 @@ public class ExpensesAnalysisActivity extends AppCompatActivity {
         return limList;
     }
 
-    public static ArrayList<Integer> expInCurrPeriod(Period currentPeriod) {
-        periodsDate = currentPeriod.getDateStart(); //Дата текущего периода
+    public static ArrayList<Integer> expInCurrPeriod(Period currentPeriod, ArrayList<String> dateEndForPeriods) {
+        periodsDate = currentPeriod.getDateStart();  // Дата начала текущего периода
         currPeriodsBudget = currentPeriod.getBudget();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US);
         perLocalDate = LocalDate.parse(periodsDate, formatter);
 
-        currLocalDate = LocalDate.now(); //Сегодняшняя дата
-        currentDate = currLocalDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String currDate = currentPeriod.getDateEnd();  // Дата конца текущего периода
+        if (currDate == null) {
+            currLocalDate = LocalDate.now(); //Сегодняшняя дата
+            currentDate = currLocalDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        }
+        else {
+            currLocalDate = LocalDate.parse(currDate, formatter);
+            currentDate = currDate;
+        }
+        dateEndForPeriods.add(currentDate);
+
         allPriceCurrentPeriod = 0; priceCurrPeriodCtg1 = 0; priceCurrPeriodCtg2 = 0; priceCurrPeriodCtg3 = 0;
                 priceCurrPeriodCtg4 = 0; priceCurrPeriodCtg5 = 0; priceCurrPeriodCtg6 = 0; priceCurrPeriodCtg7 = 0;
         currLocalDate = currLocalDate.plusDays(1);
@@ -172,6 +148,7 @@ public class ExpensesAnalysisActivity extends AppCompatActivity {
             perLocalDate = perLocalDate.plusDays(1);
         }
         expListInCurrPeriod = new ArrayList<>();
+        expListInCurrPeriod.add(allPriceCurrentPeriod);
         expListInCurrPeriod.add(priceCurrPeriodCtg1);
         expListInCurrPeriod.add(priceCurrPeriodCtg2);
         expListInCurrPeriod.add(priceCurrPeriodCtg3);
@@ -182,5 +159,31 @@ public class ExpensesAnalysisActivity extends AppCompatActivity {
 
         return expListInCurrPeriod;
 
+    }
+
+
+    public static ArrayList<ArrayList<Integer>> getListOfExpInAllPeriod(Period onePeriod) {
+        ArrayList<Integer> expList = expInCurrPeriod(onePeriod, dateEndForPeriods);   // Все расходы в текущем периоде
+        expListInPeriod.add(expList);
+        return expListInPeriod;
+    }
+
+    public static ArrayList<String> getInfoAboutPeriods(Period onePeriod) {
+        String info = "";  // Сообщения для пользователя
+        if (currPeriodsBudget < allPriceCurrentPeriod) {  // если расходы больше, чем бюдже
+            int diff = allPriceCurrentPeriod - currPeriodsBudget;// т
+            info = "Сумма расходов превысила бюджет на " + diff + "!";
+        }
+        else {
+            if (currPeriodsBudget == allPriceCurrentPeriod) {
+                info = "Сумма расходов равна бюджету.";
+            }
+            else {
+                int diff = currPeriodsBudget - allPriceCurrentPeriod;
+                info = "Сумма расходов меньше бюджета, разница равна " + diff + ".";
+            }
+        }
+        infoAboutPeriod.add(info);
+        return infoAboutPeriod;
     }
 }

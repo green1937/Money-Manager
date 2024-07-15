@@ -50,7 +50,14 @@ public class NewPeriodActivity extends AppCompatActivity {
                 // Форматирование времени как "день.месяц.год"
                 DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
                 String dateStart = dateFormat.format(currentDate);
-                System.out.println("seeeeeee ---- your current date  " + dateStart);
+
+                if (realm.where(Period.class).findAll().size() > 0) {
+                    realm.beginTransaction();
+                    Period lastPeriod = realm.where(Period.class).findAll().last();
+                    lastPeriod.setDateEnd(dateStart);  // дата конца прошлого периода равна дате начала нового периода
+                    realm.commitTransaction();
+                }
+
                 int budget = Integer.parseInt(allBudget.getText().toString());
                 int priceFood = Integer.parseInt(food.getText().toString());
                 int priceTransport = Integer.parseInt(transport.getText().toString());
