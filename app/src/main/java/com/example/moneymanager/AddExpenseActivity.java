@@ -268,19 +268,29 @@ public class AddExpenseActivity extends AppCompatActivity {
                     String eurT = eur.getString("Value");
                     String nokT = nok.getString("Value");
                     String jpyT = jpy.getString("Value");
-                    //checkCurrency(usdT, eurT, nokT, jpyT);
+
+                    String usdN = usd.getString("Nominal");
+                    String eurN = eur.getString("Nominal");
+                    String nokN = nok.getString("Nominal");
+                    String jpyN = jpy.getString("Nominal");
+
                     eurValue = Double.valueOf(eurT);
                     usdValue = Double.valueOf(usdT);
                     nokValue = Double.valueOf(nokT);
                     jpyValue = Double.valueOf(jpyT);
 
+                    int usdNominal = Integer.parseInt(usdN);
+                    int eurNominal = Integer.parseInt(eurN);
+                    int nokNominal = Integer.parseInt(nokN);
+                    int jpyNominal = Integer.parseInt(jpyN);
+
                     int price = Integer.parseInt(priceinput.getText().toString());
 
                     //если валюта выбрана не рубли, то переводим в рубли
-                    if (item2.equals("EUR"))  price = (int) Math.round( price * eurValue);
-                    if (item2.equals("USD"))  price = (int) Math.round( price * usdValue);
-                    if (item2.equals("NOK"))  price = (int) Math.round( price * nokValue);
-                    if (item2.equals("JPY"))  price = (int) Math.round( price * jpyValue);
+                    if (item2.equals("EUR"))  price = (int) Math.round( price * eurValue / eurNominal);
+                    if (item2.equals("USD"))  price = (int) Math.round( price * usdValue / usdNominal);
+                    if (item2.equals("NOK"))  price = (int) Math.round( price * nokValue / nokNominal);
+                    if (item2.equals("JPY"))  price = (int) Math.round( price * jpyValue / jpyNominal);
 
                     saveExp(price);
 
