@@ -4,6 +4,7 @@ import io.realm.RealmObject;
 
 public class Period extends RealmObject {
     String dateStart;
+    String dateEnd;
     int budget;
     int priceFood;
     int priceTransport;
@@ -19,6 +20,14 @@ public class Period extends RealmObject {
 
     public void setDateStart(String dateStart) {
         this.dateStart = dateStart;
+    }
+
+    public String getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(String dateEnd) {
+        this.dateEnd = dateEnd;
     }
 
     public int getBudget() {
